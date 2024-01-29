@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Click the below button to show the files inside the folder</h1>
+        
+        <ul id="list"></ul>
+        <button class="btn" onclick="getFiles()">Get Files</button>
+    </div>
+
+    <div class="down-container">
+        <p>enter the file name</p>
+        <input type="text" id="fileNameInput">
+        <button onclick="getFileContent()">Get File Data</button>
+        <p id="fileContent"></p>
+    </div>
+</body>
+<script src="fileserverexample.js"></script>
+<script>
+    // document.addEventListener('DOMContentLoaded',async ()=>{
+        const unorderlist = document.getElementById('list');
+        // const dConatiner = document.getElementsByClassName('down-container');
+        async function getFiles(){
+        
+            const data =await fetch('http://localhost:3000/files');
+            console.log(data);
+            const files = await data.json();
+            files.forEach(element => {
+                const li = document.createElement('li');
+                li.innerHTML = element;
+
+                unorderlist.append(li);
+            });
+        }
+
+
+        async function getFileContent() {
+      const fileNameInput = document.getElementById('fileNameInput');
+      const fileName = fileNameInput.value;
+      const response = await fetch(`http://localhost:3000/files/${fileName}`);
+      if (response.status === 200) {
+        const fileContent = await response.text();
+        document.getElementById('fileContent').textContent = fileContent;
+      } else {
+        document.getElementById('fileContent').textContent = 'File not found';
+      }
+    }
+    // })
+    
+</script>
+</html>
